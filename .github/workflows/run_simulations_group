@@ -1,43 +1,150 @@
-%  This example runs tDCS simulations with a bipolar montage for five subjects
-%  The dataset with the five head models is avaliable at https://osf . io/ah5eu/
-%  please look at the "group_average" for how to do a simple analysis of the group data
-
 % Set the subjects
 subjects = {'sub01', 'sub09', 'sub10', 'sub12', 'sub15'};
 
+% Define the montages (electrode setups)
+montages = {
+    % Montage 1
+    struct('electrode1', struct('centre', 'CP5', 'pos_ydir', 'C1', 'dimensions', [50, 50]), ...
+           'electrode2', struct('centre', 'FP2', 'pos_ydir', 'F3', 'dimensions', [50, 70])),
+
+    % Montage 2
+    struct('electrode1', struct('centre', 'CP5', 'pos_ydir', 'C1', 'dimensions', [50, 50]), ...
+           'electrode2', struct('centre', 'FP2', 'pos_ydir', 'F3', 'dimensions', [50, 70])),
+
+    % Montage 3
+    struct('electrode1', struct('centre', 'C3', 'pos_ydir', 'C1', 'dimensions', [50, 50]), ...
+           'electrode2', struct('centre', 'AF4', 'pos_ydir', 'F6', 'dimensions', [50, 70])),
+
+    % Montage 4
+    struct('electrode1', struct('centre', 'F3', 'pos_ydir', 'Fz', 'dimensions', [60, 60]), ...
+           'electrode2', struct('centre', 'P4', 'pos_ydir', 'Pz', 'dimensions', [60, 80])),
+
+    % Montage 5
+    struct('electrode1', struct('centre', 'Fz', 'pos_ydir', 'Cz', 'dimensions', [55, 55]), ...
+           'electrode2', struct('centre', 'Pz', 'pos_ydir', 'Oz', 'dimensions', [55, 75])),
+
+    % Montage 6
+    struct('electrode1', struct('centre', 'Cz', 'pos_ydir', 'P3', 'dimensions', [70, 50]), ...
+           'electrode2', struct('centre', 'P3', 'pos_ydir', 'O1', 'dimensions', [70, 60])),
+
+    % Montage 7
+    struct('electrode1', struct('centre', 'FP1', 'pos_ydir', 'AF3', 'dimensions', [50, 50]), ...
+           'electrode2', struct('centre', 'FP2', 'pos_ydir', 'AF4', 'dimensions', [50, 70])),
+
+    % Montage 8
+    struct('electrode1', struct('centre', 'C3', 'pos_ydir', 'C1', 'dimensions', [60, 60]), ...
+           'electrode2', struct('centre', 'AF4', 'pos_ydir', 'F6', 'dimensions', [60, 80])),
+
+    % Montage 9
+    struct('electrode1', struct('centre', 'Fz', 'pos_ydir', 'Cz', 'dimensions', [60, 50]), ...
+           'electrode2', struct('centre', 'Pz', 'pos_ydir', 'Oz', 'dimensions', [60, 70])),
+
+    % Montage 10
+    struct('electrode1', struct('centre', 'AF3', 'pos_ydir', 'F3', 'dimensions', [60, 60]), ...
+           'electrode2', struct('centre', 'F4', 'pos_ydir', 'FC4', 'dimensions', [60, 80])),
+
+    % Montage 11
+    struct('electrode1', struct('centre', 'C1', 'pos_ydir', 'Cz', 'dimensions', [50, 60]), ...
+           'electrode2', struct('centre', 'F4', 'pos_ydir', 'FC4', 'dimensions', [50, 70])),
+
+    % Montage 12
+    struct('electrode1', struct('centre', 'F3', 'pos_ydir', 'Fz', 'dimensions', [55, 55]), ...
+           'electrode2', struct('centre', 'P4', 'pos_ydir', 'Pz', 'dimensions', [55, 75])),
+
+    % Montage 13
+    struct('electrode1', struct('centre', 'P3', 'pos_ydir', 'O1', 'dimensions', [60, 50]), ...
+           'electrode2', struct('centre', 'C3', 'pos_ydir', 'C1', 'dimensions', [60, 70])),
+
+    % Montage 14
+    struct('electrode1', struct('centre', 'AF3', 'pos_ydir', 'F3', 'dimensions', [60, 60]), ...
+           'electrode2', struct('centre', 'AF4', 'pos_ydir', 'F4', 'dimensions', [60, 80])),
+
+    % Montage 15
+    struct('electrode1', struct('centre', 'Cz', 'pos_ydir', 'Pz', 'dimensions', [70, 50]), ...
+           'electrode2', struct('centre', 'Fz', 'pos_ydir', 'FCz', 'dimensions', [70, 60])),
+
+    % Montage 16
+    struct('electrode1', struct('centre', 'FP1', 'pos_ydir', 'F7', 'dimensions', [60, 60]), ...
+           'electrode2', struct('centre', 'P3', 'pos_ydir', 'O1', 'dimensions', [60, 70])),
+
+    % Montage 17
+    struct('electrode1', struct('centre', 'F7', 'pos_ydir', 'T3', 'dimensions', [50, 50]), ...
+           'electrode2', struct('centre', 'P4', 'pos_ydir', 'Pz', 'dimensions', [50, 70])),
+
+    % Montage 18
+    struct('electrode1', struct('centre', 'F4', 'pos_ydir', 'C4', 'dimensions', [50, 60]), ...
+           'electrode2', struct('centre', 'P3', 'pos_ydir', 'O1', 'dimensions', [50, 70])),
+
+    % Montage 19
+    struct('electrode1', struct('centre', 'F3', 'pos_ydir', 'C3', 'dimensions', [60, 50]), ...
+           'electrode2', struct('centre', 'AF4', 'pos_ydir', 'F6', 'dimensions', [60, 70])),
+
+    % Montage 20
+    struct('electrode1', struct('centre', 'AF3', 'pos_ydir', 'Fz', 'dimensions', [60, 60]), ...
+           'electrode2', struct('centre', 'AF4', 'pos_ydir', 'FC4', 'dimensions', [60, 80])),
+
+    % Montage 21
+    struct('electrode1', struct('centre', 'C3', 'pos_ydir', 'Cz', 'dimensions', [60, 60]), ...
+           'electrode2', struct('centre', 'P4', 'pos_ydir', 'Oz', 'dimensions', [60, 70])),
+
+    % Montage 22
+    struct('electrode1', struct('centre', 'C1', 'pos_ydir', 'Cz', 'dimensions', [55, 55]), ...
+           'electrode2', struct('centre', 'P4', 'pos_ydir', 'Pz', 'dimensions', [55, 75])),
+
+    % Montage 23
+    struct('electrode1', struct('centre', 'Fz', 'pos_ydir', 'Cz', 'dimensions', [55, 60]), ...
+           'electrode2', struct('centre', 'P3', 'pos_ydir', 'Pz', 'dimensions', [55, 70])),
+
+    % Montage 24
+    struct('electrode1', struct('centre', 'AF4', 'pos_ydir', 'F6', 'dimensions', [60, 60]), ...
+           'electrode2', struct('centre', 'Pz', 'pos_ydir', 'Oz', 'dimensions', [60, 70])),
+
+    % Montage 25
+    struct('electrode1', struct('centre', 'FP2', 'pos_ydir', 'F8', 'dimensions', [60, 60]), ...
+           'electrode2', struct('centre', 'P3', 'pos_ydir', 'O1', 'dimensions', [60, 70]))
+};
+
 % Start a SESSION
 S = sim_struct('SESSION');
-S . map_to_fsavg = true;
-S . map_to_MNI = true;
-S . fields = 'eEjJ';
+S.map_to_fsavg = true;
+S.map_to_MNI = true;
+S.fields = 'eEjJ';
 
-% Set a TDCSLIST with the simulation set-up
-S . poslist{1} = sim_struct('TDCSLIST');
-S . poslist{1} . currents = [0.001, -0.001];
+% Set up the TDCSLIST with the simulation set-up
+S.poslist{1} = sim_struct('TDCSLIST');
+S.poslist{1}.currents = [0.001, -0.001];
 
-S . poslist{1} . electrode(1) . channelnr = 1;
-S . poslist{1} . electrode(1) . centre = 'C3';
-S . poslist{1} . electrode(1) . pos_ydir = 'C1';
-S . poslist{1} . electrode(1) . shape = 'rect';
-S . poslist{1} . electrode(1) . dimensions = [50, 50];
-S . poslist{1} . electrode(1) . thickness = 4;
-
-S . poslist{1} . electrode(2) . channelnr = 2;
-S . poslist{1} . electrode(2) . centre = 'AF4';
-S . poslist{1} . electrode(2) . pos_ydir = 'F6';
-S . poslist{1} . electrode(2) . shape = 'rect';
-S . poslist{1} . electrode(2) . dimensions = [50, 70];
-S . poslist{1} . electrode(2) . thickness = 4;
-
-% create main results folder
-if ~exist('bipolar','dir')
+% Create main results folder
+if ~exist('bipolar', 'dir')
     mkdir('bipolar');
 end
 
-% Run the simulation in each subject
+% Run the simulation for each subject
 for i = 1:length(subjects)
-     sub = subjects{i};
-     S . subpath = fullfile(['m2m_' sub]);  % head mesh
-     S . pathfem = fullfile('bipolar', sub); % Output directory
-     run_simnibs(S);
+    sub = subjects{i};
+    S.subpath = fullfile(['m2m_' sub]);  % head mesh
+    S.pathfem = fullfile(sub, sprintf('montage%d', j)); % Output directory
+
+    % Iterate over different montages
+    for j = 1:length(montages)
+        % Set up electrodes for the current montage
+        S.poslist{1}.electrode(1).channelnr = 1;
+        S.poslist{1}.electrode(1).centre = montages{j}.electrode1.centre;
+        S.poslist{1}.electrode(1).pos_ydir = montages{j}.electrode1.pos_ydir;
+        S.poslist{1}.electrode(1).shape = 'rect';
+        S.poslist{1}.electrode(1).dimensions = montages{j}.electrode1.dimensions;
+        S.poslist{1}.electrode(1).thickness = 4;
+
+        S.poslist{1}.electrode(2).channelnr = 2;
+        S.poslist{1}.electrode(2).centre = montages{j}.electrode2.centre;
+        S.poslist{1}.electrode(2).pos_ydir = montages{j}.electrode2.pos_ydir;
+        S.poslist{1}.electrode(2).shape = 'rect';
+        S.poslist{1}.electrode(2).dimensions = montages{j}.electrode2.dimensions;
+        S.poslist{1}.electrode(2).thickness = 4;
+
+        % Run the simulation for the current subject and montage
+        S.pathfem = fullfile('bipolar', sub, sprintf('montage%d', j));  % Output directory for each montage
+        run_simnibs(S);
+    end
 end
+
