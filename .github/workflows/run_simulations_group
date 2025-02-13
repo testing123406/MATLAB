@@ -1,3 +1,9 @@
+% Add SimNIBS to the MATLAB path
+addpath('/Users/benjaminostow/Applications/SimNIBS-4.1/matlab');
+
+% Optional: Save the path for future sessions
+savepath;
+
 % Set the subjects
 subjects = {'sub01', 'sub09', 'sub10', 'sub12', 'sub15'};
 
@@ -147,10 +153,12 @@ end
 for i = 1:length(subjects)
     sub = subjects{i};
     S.subpath = fullfile(['m2m_' sub]);  % head mesh
-    S.pathfem = fullfile(sub, sprintf('montage%d', j)); % Output directory
 
     % Iterate over different montages
     for j = 1:length(montages)
+
+        S.pathfem = fullfile(sub, sprintf('montage%d', j)); % Output directory
+
         % Set up electrodes for the current montage
         S.poslist{1}.currents = montage.currents;
         S.poslist{1}.electrode(1).channelnr = 1;
