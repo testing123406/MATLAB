@@ -45,7 +45,7 @@ for i = 1:length(subjects)
         S.pathfem = fullfile(sub, sprintf('montage%d', j)); % Output directory
 
         % Set up electrodes for the current montage
-        S.poslist{1}.currents = montages.currents;
+        S.poslist{1}.currents = montages{j}.currents;
         S.poslist{1}.electrode(1).channelnr = 1;
         S.poslist{1}.electrode(1).centre = montages{j}.electrode1.centre;
         S.poslist{1}.electrode(1).pos_ydir = montages{j}.electrode1.pos_ydir;
