@@ -1,8 +1,5 @@
-% Add SimNIBS to the MATLAB path
-addpath('/Users/benjaminostow/Applications/SimNIBS-4.1/matlab');
-
-% Optional: Save the path for future sessions
-savepath;
+addpath('/Users/benjaminostow/Applications/SimNIBS-4.1/matlab_tools')
+savepath
 
 % Set the subjects
 subjects = {'204319', '204521', '211417', '212116', '213017'};
