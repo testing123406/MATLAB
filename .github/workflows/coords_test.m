@@ -10,12 +10,12 @@ subjects = {'204319', '204521', '211417', '212116', '213017'};
 % Define the montages (electrode setups)
 montages = {
     % Montage 1
-    struct('electrode1', struct('centre', '[-59.45, 49.58, 34.91]', 'pos_ydir', 'C1', 'dimensions', [50,50]), ...
+    struct('electrode1', struct('centre', [-59.45, 49.58, 34.91], 'pos_ydir', 'C1', 'dimensions', [50,50]), ...
            'electrode2', struct('centre', 'AF4', 'pos_ydir', 'F6', 'dimensions', [50,50]), ...
            'currents', [1, -1]),  % Current intensity for Montage 1
     
     % Montage 2
-    struct('electrode1', struct('centre', '[-59.45, 49.58, 34.91]', 'pos_ydir', 'Fz', 'dimensions', [60, 60]), ...
+    struct('electrode1', struct('centre', [-59.45, 49.58, 34.91], 'pos_ydir', 'Fz', 'dimensions', [60, 60]), ...
            'electrode2', struct('centre', 'P4', 'pos_ydir', 'Pz', 'dimensions', [60, 80]), ...
            'currents', [2, -2]),  % Current intensity for Montage 2
 };
@@ -62,7 +62,7 @@ for i = 1:length(subjects)
         S.poslist{1}.electrode(1).channelnr = 1;
         S.poslist{1}.electrode(1).centre = montages{j}.electrode1.centre;
         S.poslist{1}.electrode(1).pos_ydir = montages{j}.electrode1.pos_ydir;
-        S.poslist{1}.electrode(1).shape = 'rect'
+        S.poslist{1}.electrode(1).shape = 'rect';
         S.poslist{1}.electrode(1).dimensions = montages{j}.electrode1.dimensions;
         S.poslist{1}.electrode(1).thickness = 4;
 
@@ -70,7 +70,7 @@ for i = 1:length(subjects)
         S.poslist{1}.electrode(2).channelnr = 2;
         S.poslist{1}.electrode(2).centre = montages{j}.electrode2.centre;
         S.poslist{1}.electrode(2).pos_ydir = montages{j}.electrode2.pos_ydir;
-        S.poslist{1}.electrode(2).shape = 'rect'
+        S.poslist{1}.electrode(2).shape = 'rect';
         S.poslist{1}.electrode(2).dimensions = montages{j}.electrode2.dimensions;
         S.poslist{1}.electrode(2).thickness = 4;
 
