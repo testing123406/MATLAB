@@ -62,7 +62,7 @@ for i = 1:length(subjects)
         S.poslist{1}.electrode(1).channelnr = 1;
         S.poslist{1}.electrode(1).centre = montages{j}.electrode1.centre;
         S.poslist{1}.electrode(1).pos_ydir = montages{j}.electrode1.pos_ydir;
-        S.poslist{1}.electrode(1).shape = "rect"
+        S.poslist{1}.electrode(1).shape = 'rect'
         S.poslist{1}.electrode(1).dimensions = montages{j}.electrode1.dimensions;
         S.poslist{1}.electrode(1).thickness = montages{j}.electrode1.thickness;
 
@@ -70,7 +70,7 @@ for i = 1:length(subjects)
         S.poslist{1}.electrode(2).channelnr = 2;
         S.poslist{1}.electrode(2).centre = montages{j}.electrode2.centre;
         S.poslist{1}.electrode(2).pos_ydir = montages{j}.electrode2.pos_ydir;
-        S.poslist{1}.electrode(2).shape = "rect"
+        S.poslist{1}.electrode(2).shape = 'rect'
         S.poslist{1}.electrode(2).dimensions = montages{j}.electrode2.dimensions;
         S.poslist{1}.electrode(2).thickness = montages{j}.electrode2.thickness;
 
