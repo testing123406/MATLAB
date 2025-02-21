@@ -30,8 +30,8 @@ S.fields = 'eEjJ';
 S.poslist{1} = sim_struct('TDCSLIST');
 
 % Create main results folder
-if ~exist('ellipse', 'dir')
-    mkdir('ellipse');
+if ~exist('type', 'dir')
+    mkdir('type');
 end
 
 % Run the simulation for each subject
@@ -42,7 +42,7 @@ for i = 1:length(subjects)
     % Iterate over different montages
     for j = 1:length(montages)
         % Define the output directory
-        output_dir = fullfile('ellipse', sub, sprintf('montage%d', j));
+        output_dir = fullfile('type', sub, sprintf('montage%d', j));
 
         % Ensure the directory exists before running SimNIBS
         if ~exist(output_dir, 'dir')
