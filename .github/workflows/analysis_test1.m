@@ -1,51 +1,52 @@
-% Add the SimNIBS MATLAB tools path (adjusting to the original folder)
-addpath('/Users/benjaminostow/Applications/SimNIBS-4.1/matlab_tools');
-savepath;
+% Simple ROI analysis of the electric field from a simulation.
+% We will calculate the mean electric field in a gray matter ROI
+% The ROI is defined using an MNI coordinate.
 
-% Define subjects and file details
-subjects = {'204319', '204521'};
-results_folder = 'mni_volumes';
+%% Load Simulation Result
+
+% Load the mesh file from the correct location
+head_mesh = mesh_load_gmsh4(...
+    fullfile('/Users/benjaminostow/Documents/MATLAB/singlemontage', '204319', '204319_TDCS_1_scalar.msh') ...
+);
+
+% Extract only gray matter volume elements (tag 2 in the mesh)
+gray_matter = mesh_extract_regions(head_mesh, 'region_idx', 2);
+
+%% Define the ROI
+
+% Define the M1 coordinate in MNI space (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2034289/)
+mni_coords = [-37, -21, 58];  % Example M1 coordinate
+subject_folder = '/Users/benjaminostow/Documents/MATLAB';  % Main MATLAB folder
+
+% Convert MNI coordinate to subject space
+subject_coords = mni2subject_coords(mni_coords, fullfile(subject_folder, 'm2m_204319'));
+
+% Define a spherical ROI with a 10 mm radius
+r = 10;  % Radius in mm
+
+% Get tetrahedron centers from the mesh
+elm_centers = mesh_get_tetrahedron_centers(gray_matter);
+
+% Find the elements inside the ROI
+roi = sqrt(sum(bsxfun(@minus, elm_centers, subject_coords).^2, 2)) < r;
+
+% Get element volumes (used for weighted averaging)
+elm_vols = mesh_get_tetrahedron_sizes(gray_matter);
+
+%% Get field and calculate the mean
+% Get the field of interest
 field_name = 'magnE';
+field_idx = get_field_idx(gray_matter, field_name, 'elements');
+field = gray_matter.element_data{field_idx}.tetdata;
 
-mni_image_suffix = ['_TDCS_1_scalar_MNI_' field_name '.nii.gz'];
+% Calculate the mean electric field in the ROI (volume-weighted)
+avg_field_roi = sum(field(roi) .* elm_vols(roi)) / sum(elm_vols(roi));
 
-% Load the mask (binary .nii file, where 1 indicates the desired voxels)
-mask_image = nifti_load('/Users/benjaminostow/Downloads/Language Network Atlas 1_9_25/cleanedoutput500.nii.gz');
-mask = mask_image.vol;  % Extract the mask volume
+% Display the result
+fprintf('Mean %s in ROI: %f\n', field_name, avg_field_roi);
 
-% Load the first subject's image to get dimensions and initialize field_avg
-template_image = nifti_load(fullfile('/Users/benjaminostow/Documents/MATLAB/singlemontage', subjects{1}, results_folder, [subjects{1} mni_image_suffix]));
-field_avg = zeros(size(template_image.vol));
-field_count = zeros(size(template_image.vol));  % To count non-zero voxels for averaging
+%% Save the result
+save_path = fullfile(subject_folder, 'mean_magnE_ROI.mat');
+save(save_path, 'avg_field_roi');
 
-% Loop through subjects
-for i = 1:length(subjects)
-    sub = subjects{i};
-    
-    % Construct the file path for the subject's magE image
-    file_path = fullfile('/Users/benjaminostow/Documents/MATLAB/singlemontage', sub, results_folder, [sub mni_image_suffix]);
-
-    % Check if the file is a .gz file and unzip it if necessary
-    if endsWith(file_path, '.gz')
-        gunzip(file_path);  % Unzips the file in the same directory
-        file_path = strrep(file_path, '.gz', '');  % Update the path to the unzipped file
-    end
-
-    % Now load the nifti image (after unzipping if needed)
-    img = nifti_load(file_path);
-    
-    % Apply the mask: Only accumulate field values where the mask is 1
-    field_avg(mask == 1) = field_avg(mask == 1) + img.vol(mask == 1);
-    field_count(mask == 1) = field_count(mask == 1) + 1;  % Count non-zero voxels for averaging
-end
-
-% Calculate the mean for only the masked voxels
-field_avg = field_avg ./ field_count;
-
-% Create an output image for the averaged field
-avg_image = template_image;
-avg_image.vol = field_avg;
-
-% Save the averaged image in MATLAB folder inside Documents
-nifti_save(avg_image, '/Users/benjaminostow/Documents/MATLAB/mean_' field_name '_masked.nii.gz');
-
+fprintf('Results saved to: %s\n', save_path);
