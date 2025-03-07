@@ -2,7 +2,7 @@
 % Copyright (C) 2019 Guilherme B Saturnino
 
 % Define subject numbers
-subject_numbers = [204319, 204320, 204321, 204322]; % Add more numbers as needed
+subject_numbers = [204319, 204521, 211417, 213017,212116]; % Add more numbers as needed
 
 % Iterate over each subject
 for i = 1:length(subject_numbers)
