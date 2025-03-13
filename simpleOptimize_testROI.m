@@ -27,5 +27,7 @@ opt.target.positions = [-50, 16, 20];
 % Intensity of the electric field (in V/m)
 opt.target.intensity = 0.3;
 
+opt.visible = false;
+
 % Run optimization
 run_simnibs(opt);
