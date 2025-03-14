@@ -15,7 +15,7 @@ opt.max_individual_current = 1e-3;
 opt.max_active_electrodes = 8;
 
 % Define the target using a .nii mask
-opt.target.mask = '/Users/benjaminostow/Downloads/Language Network Atlas 1_9_25/cleanedoutput500.nii.gz';
+opt.target.nii_file = '/Users/benjaminostow/Downloads/Language Network Atlas 1_9_25/cleanedoutput500.nii.gz';
 
 % Define the desired intensity of the electric field (in V/m)
 opt.target.intensity = 0.3;  % Increase EF strength for optimization
