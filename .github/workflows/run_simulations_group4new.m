@@ -155,7 +155,7 @@ for i = 1:length(subjects)
         S.poslist{1}.electrode(1).pos_ydir = [1, 1, 0] / sqrt(2);
         S.poslist{1}.electrode(1).shape = montages{j}.electrode1.shape;
         S.poslist{1}.electrode(1).dimensions = montages{j}.electrode1.dimensions;
-        S.poslist{1}.electrode(1).thickness = montages{j}.electrode2.thickness;
+        S.poslist{1}.electrode(1).thickness = montages{j}.electrode1.thickness;
 
         % Electrode 2 setup
         S.poslist{1}.electrode(2).channelnr = 2;
