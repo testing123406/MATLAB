@@ -1,5 +1,5 @@
 % Add SimNIBS to the MATLAB path
-addpath('/Users/benjaminostow/Applications/SimNIBS-4.1/matlab_tools');
+addpath('C:\Users\<USER_NAME>\AppData\Local\SimNIBS\matlab_tools');
 
 % Optional: Save the path for future sessions
 savepath;
