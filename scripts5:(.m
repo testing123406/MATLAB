@@ -117,7 +117,7 @@ S.map_to_MNI = true;
 S.fields = 'eEjJ';
 
 % Set up the TDCSLIST with the simulation setup
-S.poslist(1) = sim_struct('TDCSLIST');  % Fixed: Use parentheses for indexing
+S.poslist{1} = sim_struct('TDCSLIST');
 
 % Create main results folder
 if ~exist('scripts', 'dir')
@@ -143,26 +143,24 @@ for i = 1:length(subjects)
         S.pathfem = output_dir; 
 
         % Set up electrodes for the current montage
-        S.poslist(1).currents = montages{j}.currents;  % Fixed: Use parentheses for indexing
+        S.poslist{1}.currents = montages(j).currents;
         
         % Ensure electrode struct arrays exist
-        S.poslist(1).electrode = repmat(struct(), 1, 2);  % Fixed: Use parentheses for indexing
+        S.poslist{1}.electrode = repmat(struct(), 1, 2);
 
         % Electrode 1 setup
-        S.poslist(1).electrode(1).channelnr = 1;
-        S.poslist(1).electrode(1).centre = montages{j}.electrode1.centre;
-        S.poslist(1).electrode(1).pos_ydir = montages{j}.electrode1.pos_ydir;
-        S.poslist(1).electrode(1).shape = 'rect';
-        S.poslist(1).electrode(1).dimensions = montages{j}.electrode1.dimensions;
-        S.poslist(1).electrode(1).thickness = 4;
+        S.poslist{1}.electrode(1).channelnr = 1;
+        S.poslist{1}.electrode(1).centre = montages(j).electrode1.centre;
+        S.poslist{1}.electrode(1).shape = 'rect';
+        S.poslist{1}.electrode(1).dimensions = montages(j).electrode1.dimensions;
+        S.poslist{1}.electrode(1).thickness = 4;
 
         % Electrode 2 setup
-        S.poslist(1).electrode(2).channelnr = 2;
-        S.poslist(1).electrode(2).centre = montages{j}.electrode2.centre;
-        S.poslist(1).electrode(2).pos_ydir = montages{j}.electrode2.pos_ydir;
-        S.poslist(1).electrode(2).shape = 'rect';
-        S.poslist(1).electrode(2).dimensions = montages{j}.electrode2.dimensions;
-        S.poslist(1).electrode(2).thickness = 4;
+        S.poslist{1}.electrode(2).channelnr = 2;
+        S.poslist{1}.electrode(2).centre = montages(j).electrode2.centre;
+        S.poslist{1}.electrode(2).shape = 'rect';
+        S.poslist{1}.electrode(2).dimensions = montages(j).electrode2.dimensions;
+        S.poslist{1}.electrode(2).thickness = 4;
 
         % Run the simulation for the current subject and montage
         run_simnibs(S);
