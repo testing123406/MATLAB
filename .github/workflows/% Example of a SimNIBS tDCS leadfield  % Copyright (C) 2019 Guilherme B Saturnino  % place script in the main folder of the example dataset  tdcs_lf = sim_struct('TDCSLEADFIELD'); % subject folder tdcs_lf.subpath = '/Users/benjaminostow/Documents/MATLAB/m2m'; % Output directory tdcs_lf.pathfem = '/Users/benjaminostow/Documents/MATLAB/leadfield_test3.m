@@ -16,7 +16,7 @@ for i = 1:length(subject_numbers)
     tdcs_lf.pathfem = ['/Users/benjaminostow/Documents/MATLAB/leadfield_' num2str(subject_numbers(i))];
     
     % Uncomment to use the pardiso solver
-    % tdcs_lf.solver_options = 'pardiso';
+    tdcs_lf.solver_options = 'pardiso';
     
     % Run SimNIBS simulation
     run_simnibs(tdcs_lf);
