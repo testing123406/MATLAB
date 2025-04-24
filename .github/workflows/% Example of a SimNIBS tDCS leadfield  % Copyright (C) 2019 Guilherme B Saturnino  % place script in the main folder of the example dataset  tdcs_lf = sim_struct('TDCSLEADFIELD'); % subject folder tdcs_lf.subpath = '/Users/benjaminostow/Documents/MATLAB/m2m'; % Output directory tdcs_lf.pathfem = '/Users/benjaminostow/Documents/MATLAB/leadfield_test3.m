@@ -10,10 +10,10 @@ for i = 1:length(subject_numbers)
     tdcs_lf = sim_struct('TDCSLEADFIELD');
     
     % Subject folder
-    tdcs_lf.subpath = ['/Users/benjaminostow/Documents/MATLAB/m2m_' num2str(subject_numbers(i))];
+    tdcs_lf.subpath = ['D:\MATLAB\Meshes+Scripts\m2m_' num2str(subject_numbers(i))];
     
     % Output directory
-    tdcs_lf.pathfem = ['/Users/benjaminostow/Documents/MATLAB/leadfield_' num2str(subject_numbers(i))];
+    tdcs_lf.pathfem = ['D:\MATLAB\leadfield_'num2str(subject_numbers(i))];
     
     % Uncomment to use the pardiso solver
     tdcs_lf.solver_options = 'pardiso';
