@@ -14,7 +14,8 @@ for i = 1:length(subject_ids)
     
     % Select the leadfield file
     opt.leadfield_hdf = fullfile(['leadfield_' subj], ...
-        [subj '_leadfield_EEG10-10_UI_Jurak_2007.hdf5']);
+    [subj '_leadfield_EEG10-10_UI_Jurak_2007.hdf5']);
+
     
     % Subject path
     opt.subpath = ['m2m_' subj '/']; 
