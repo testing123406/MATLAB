@@ -1,8 +1,6 @@
 % Example of SimNIBS tDCS optimization with a distributed target in MATLAB
 % Looping through multiple subjects
 
-% Copyright (C) 2025 Benjamin
-
 % List of subject IDs
 subject_ids = {'204521', '212116', '213017', '211417'};  % Add all your subjects here
 
