@@ -1,49 +1,61 @@
 %% Setup
+addpath('/Users/benjaminostow/Applications/SimNIBS-4.1/simnibs_env/lib/python3.9/site-packages/simnibs/matlab_tools');
+
 subjects = {'212116', '213017', '211417', '204521'};
 base_dir = '/Users/benjaminostow/Documents/MATLAB';
 results_folder = fullfile('custom_montage', 'fsavg_overlays');
-fsavg_msh_name = '_TDCS_1_scalar_fsavg.msh';
-field_name = 'E_normal';
+fsavg_msh_suffix = '_TDCS_1_scalar_fsavg.msh';
+fields = {'E_normal', 'E_magn'};
 
-fields = {};
-for i = 1:length(subjects)
-    sub = subjects{i};
-    % Load mesh with EF results in fsaverage space
-    msh_path = fullfile(base_dir, sub, results_folder, [sub fsavg_msh_name]);
-    m = mesh_load_gmsh4(msh_path);
-    
-    % Extract EF normal component field
-    fields{i} = m.node_data{get_field_idx(m, field_name, 'node')}.data;
+% Load template mesh for geometry
+m_out = mesh_load_gmsh4(fullfile(base_dir, subjects{1}, results_folder, [subjects{1} fsavg_msh_suffix]));
+m_out.node_data = {};
+
+for f = 1:numel(fields)
+    vals = [];
+    for s = 1:numel(subjects)
+        msh_path = fullfile(base_dir, subjects{s}, results_folder, [subjects{s} fsavg_msh_suffix]);
+        if ~isfile(msh_path)
+            warning('Missing: %s', msh_path);
+            continue;
+        end
+        m = mesh_load_gmsh4(msh_path);
+        try
+            idx = get_field_idx(m, fields{f}, 'node');
+            vals(:, end+1) = m.node_data{idx}.data;
+        catch
+            warning('Field %s missing for %s', fields{f}, subjects{s});
+        end
+    end
+    if isempty(vals)
+        warning('No data for field %s, skipping.', fields{f});
+        continue;
+    end
+    m_out.node_data{2*f-1} = struct('data', mean(vals, 2), 'name', [fields{f} '_avg'], 'type', 'node data');
+    m_out.node_data{2*f} = struct('data', std(vals, 0, 2), 'name', [fields{f} '_std'], 'type', 'node data');
 end
 
-%% Calculate mean and std across subjects
-fields = cell2mat(fields); % concatenate fields into matrix: nodes x subjects
-avg_field = mean(fields, 2);
-std_field = std(fields, 0, 2);
+out_dir = fullfile(base_dir, 'average_results');
+if ~exist(out_dir, 'dir')
+    mkdir(out_dir);
+end
+mesh_save_gmsh4(m_out, fullfile(out_dir, 'avg_fields.msh'));
+disp('Saved averaged mesh.');
 
-% Clear previous node_data and add mean/std
-m.node_data = [];
-m.node_data{1}.data = avg_field;
-m.node_data{1}.name = [field_name '_avg'];
-m.node_data{2}.data = std_field;
-m.node_data{2}.name = [field_name '_std'];
-
-%% Plot average EF normal
-figure; 
-mesh_show_surface(m, 'field_idx', [field_name '_avg']);
-title('Average Normal Electric Field');
-
-%% Plot std EF normal
+% Plot only average of E_magn field with jet colormap
 figure;
-mesh_show_surface(m, 'field_idx', [field_name '_std']);
-title('Standard Deviation of Normal Electric Field');
+mesh_show_surface(m_out, 'field_idx', [fields{2} '_avg']);  % E_magn avg
+title(['Average ' fields{2}]);
+view(-125, 10);
+axis off;
+camlight headlight;
+lighting gouraud;
 
-%% Save averaged mesh with mean and std fields
-output_dir = fullfile(base_dir, 'average_results');
-if ~exist(output_dir, 'dir')
-    mkdir(output_dir);
-end
+colormap(jet(256));  % Classic blue to red colormap
+colorbar;
 
-output_file = fullfile(output_dir, ['avg_' field_name '.msh']);
-mesh_save_gmsh4(m, output_file);
-disp(['Saved averaged mesh to: ', output_file]);
+caxis([min(m_out.node_data{3}.data), max(m_out.node_data{3}.data)]);  % Node data 3 is E_magn_avg
+
+exportgraphics(gcf, fullfile(out_dir, ['avg_' fields{2} '_jet.png']), 'Resolution', 300);
+disp('Saved average E_magn figure with jet colormap.');
+
